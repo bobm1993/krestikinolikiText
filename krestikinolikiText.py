@@ -9,7 +9,7 @@ def main(b, n):
             cur_player = ' O'
             pl_input(cur_player, b, n)
         counter += 1
-        if counter > 2 * n - 2:
+        if counter > 2 * num - 2:
             player = check_win(cur_player, b, n)  # проверка является ли комбинация игрока выиграшной
             if player:
                 print(player, 'win!')
@@ -94,8 +94,14 @@ def check_win(pl, b, n):  # проверка на выигращные комб�
                 one_win.append(b[i + k])
             win.append(one_win)  # диагональ справа налево
     for i in win:
-        if all(j == pl for j in i):
-            return pl
+        count = 0
+        for j in i:
+            if j == pl:
+                count += 1
+            else:
+                count = 0
+            if count == num:
+                return pl
     return False
 
 
@@ -105,7 +111,12 @@ while True:
     except ValueError:
         print('you must enter integer > 2')
         continue
-    if board_size > 2:
+    try:
+        num = int(input('how much icons in a row needs to win?'))  # к-во значков для победы
+    except ValueError:
+        print('you must enter integer > 2')
+        continue
+    if board_size > 2 and num > 2:
         board = list(range(1, board_size ** 2 + 1))
         diagonal = ''
         while True:
