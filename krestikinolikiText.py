@@ -10,21 +10,21 @@ def main(b, n):
             pl_input(cur_player, b, n)
         counter += 1
         if counter > 2 * n - 2:
-            player = check_win(cur_player, b, n)
+            player = check_win(cur_player, b, n)  # проверка является ли комбинация игрока выиграшной
             if player:
                 print(player, 'win!')
                 break
-        if counter == n ** 2:
+        if counter == n ** 2:  # если ходы закончились - ничья
             print('draw!')
             break
     make_board(b, n)
 
 
-def make_board(b, n):
+def make_board(b, n):  # гененрация игрового поля
     str1 = '-----'
     print(str1 * n + '---')
     for k in b:
-        if type(k) is int and k < 10:
+        if type(k) is int and k < 10:  # добавляется пробел для внешенего вида
             j = b.index(k)
             b.remove(k)
             b.insert(j, " " + str(k))
@@ -39,7 +39,7 @@ def make_board(b, n):
         print(str1 * n + '---')
 
 
-def pl_input(pl, b, n):
+def pl_input(pl, b, n):  # ходы игроков
     while True:
         try:
             pl_answer = int(input('where do you want to place ' + pl + '?'))
@@ -62,7 +62,7 @@ def pl_input(pl, b, n):
             print('you must enter integer from 1 to 9')
 
 
-def check_win(pl, b, n):
+def check_win(pl, b, n):  # проверка на выигращные комбинации
     win = []
     for i in range(0, n ** 2 - n + 1, n):
         lst = range(n)
@@ -70,36 +70,37 @@ def check_win(pl, b, n):
         all(b[i] == b[i + j] for j in lst)
         for k in lst:
             one_win.append(b[i + k])
-        win.append(one_win)
+        win.append(one_win)  # выиграши по горизонтали
     for i in range(0, n):
         lst = range(0, n ** 2 - n + 1, n)
         one_win = []
         all(b[i] == b[i + j] for j in lst)
         for k in lst:
             one_win.append(b[i + k])
-        win.append(one_win)
+        win.append(one_win)  # выиграши по вертикали
     for i in range(0, n, n):
         lst = range(0, n ** 2, n + 1)
         one_win = []
         all(b[i] == b[i + j] for j in lst)
         for k in lst:
             one_win.append(b[i + k])
-        win.append(one_win)
+        win.append(one_win)  # диагональ слева направо
     for i in range(n - 1, n):
         lst = list(range(0, n ** 2 - n, n - 1))
         one_win = []
         all(b[i] == b[i + j] for j in lst)
         for k in lst:
             one_win.append(b[i + k])
-        win.append(one_win)
+        win.append(one_win)  # диагональ справа налево
     for i in win:
         if all(j == pl for j in i):
             return pl
     return False
 
+
 while True:
     try:
-        board_size = int(input('which size of board would you like? (ex. if you want 5x5 enter "5")'))
+        board_size = int(input('which size of board would you like? (ex. if you want 5x5 enter "5")'))  # размер поля
     except ValueError:
         print('you must enter integer > 2')
         continue
@@ -108,7 +109,7 @@ while True:
         main(board, board_size)
         y_n = ''
         while True:
-            y_n = input('would you like to restart? y/n')
+            y_n = input('would you like to restart? y/n')  # предложение переиграть
             if y_n in ('y', 'n'):
                 break
             print('Invalid input.')
