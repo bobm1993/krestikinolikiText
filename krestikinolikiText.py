@@ -1,39 +1,56 @@
-def main(b):
+def main(b, n):
     counter = 0
     while True:
-        make_board(b)
+        make_board(b, n)
         if counter % 2 == 0:
-            pl_input('X', b)
+            cur_player = ' X'
+            pl_input(cur_player, b, n)
         else:
-            pl_input('O', b)
+            cur_player = ' O'
+            pl_input(cur_player, b, n)
         counter += 1
-        if counter > 4:
-            player = check_win(b)
+        if counter > 2 * n - 2:
+            player = check_win(cur_player, b, n)
             if player:
                 print(player, 'win!')
                 break
-        if counter == 9:
+        if counter == n ** 2:
             print('draw!')
             break
-    make_board(b)
+    make_board(b, n)
 
 
-def make_board(b):
-    print('-------------')
-    for i in range(3):
-        print('|', b[0 + i * 3], '|', b[1 + i * 3], '|', b[2 + i * 3], '|')
-        print("-------------")
+def make_board(b, n):
+    str1 = '-----'
+    print(str1 * n + '---')
+    for k in b:
+        if type(k) is int and k < 10:
+            j = b.index(k)
+            b.remove(k)
+            b.insert(j, " " + str(k))
+        elif type(k) is int:
+            j = b.index(k)
+            b.remove(k)
+            b.insert(j, str(k))
+    for i in range(n):
+        for j in range(n):
+            print(' |', b[j + i * n], end='')
+        print(' |')
+        print(str1 * n + '---')
 
 
-def pl_input(pl, b):
+def pl_input(pl, b, n):
     while True:
         try:
-            pl_answer = input('where do you want to place ' + pl + '?')
-            pl_answer = int(pl_answer)
+            pl_answer = int(input('where do you want to place ' + pl + '?'))
         except ValueError:
-            print('you must enter integer from 1 to 9')
+            print('you must enter integer from 1 to ' + str(n ** 2))
             continue
-        if 1 <= pl_answer <= 9:
+        if 1 <= pl_answer <= n ** 2:
+            if pl_answer < 10:
+                pl_answer = ' ' + str(pl_answer)
+            else:
+                pl_answer = str(pl_answer)
             if pl_answer in b:
                 j = b.index(pl_answer)
                 b.remove(pl_answer)
@@ -45,23 +62,59 @@ def pl_input(pl, b):
             print('you must enter integer from 1 to 9')
 
 
-def check_win(b):
-    win = ((0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6))
+def check_win(pl, b, n):
+    win = []
+    for i in range(0, n ** 2 - n + 1, n):
+        lst = range(n)
+        one_win = []
+        all(b[i] == b[i + j] for j in lst)
+        for k in lst:
+            one_win.append(b[i + k])
+        win.append(one_win)
+    for i in range(0, n):
+        lst = range(0, n ** 2 - n + 1, n)
+        one_win = []
+        all(b[i] == b[i + j] for j in lst)
+        for k in lst:
+            one_win.append(b[i + k])
+        win.append(one_win)
+    for i in range(0, n, n):
+        lst = range(0, n ** 2, n + 1)
+        one_win = []
+        all(b[i] == b[i + j] for j in lst)
+        for k in lst:
+            one_win.append(b[i + k])
+        win.append(one_win)
+    for i in range(n - 1, n):
+        lst = list(range(0, n ** 2 - n, n - 1))
+        one_win = []
+        all(b[i] == b[i + j] for j in lst)
+        for k in lst:
+            one_win.append(b[i + k])
+        win.append(one_win)
     for i in win:
-        if b[i[0]] == b[i[1]] == b[i[2]]:
-            return b[i[0]]
+        if all(j == pl for j in i):
+            return pl
     return False
 
 while True:
-    board = list(range(1, 10))
-    main(board)
-    y_n = ''
-    while True:
-        y_n = input('would you like to restart? y/n')
-        if y_n in ('y', 'n'):
-            break
-        print('Invalid input.')
-    if y_n == 'y':
+    try:
+        board_size = int(input('which size of board would you like? (ex. if you want 5x5 enter "5")'))
+    except ValueError:
+        print('you must enter integer > 2')
         continue
-    elif y_n == 'n':
-        break
+    if board_size > 2:
+        board = list(range(1, board_size ** 2 + 1))
+        main(board, board_size)
+        y_n = ''
+        while True:
+            y_n = input('would you like to restart? y/n')
+            if y_n in ('y', 'n'):
+                break
+            print('Invalid input.')
+        if y_n == 'y':
+            continue
+        elif y_n == 'n':
+            break
+    else:
+        print('you must enter integer > 2')
