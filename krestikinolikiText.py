@@ -78,20 +78,21 @@ def check_win(pl, b, n):  # проверка на выигращные комб�
         for k in lst:
             one_win.append(b[i + k])
         win.append(one_win)  # выиграши по вертикали
-    for i in range(0, n, n):
-        lst = range(0, n ** 2, n + 1)
-        one_win = []
-        all(b[i] == b[i + j] for j in lst)
-        for k in lst:
-            one_win.append(b[i + k])
-        win.append(one_win)  # диагональ слева направо
-    for i in range(n - 1, n):
-        lst = list(range(0, n ** 2 - n, n - 1))
-        one_win = []
-        all(b[i] == b[i + j] for j in lst)
-        for k in lst:
-            one_win.append(b[i + k])
-        win.append(one_win)  # диагональ справа налево
+    if diagonal == 'y':
+        for i in range(0, n, n):
+            lst = range(0, n ** 2, n + 1)
+            one_win = []
+            all(b[i] == b[i + j] for j in lst)
+            for k in lst:
+                one_win.append(b[i + k])
+            win.append(one_win)  # диагональ слева направо
+        for i in range(n - 1, n):
+            lst = list(range(0, n ** 2 - n, n - 1))
+            one_win = []
+            all(b[i] == b[i + j] for j in lst)
+            for k in lst:
+                one_win.append(b[i + k])
+            win.append(one_win)  # диагональ справа налево
     for i in win:
         if all(j == pl for j in i):
             return pl
@@ -106,16 +107,22 @@ while True:
         continue
     if board_size > 2:
         board = list(range(1, board_size ** 2 + 1))
-        main(board, board_size)
-        y_n = ''
+        diagonal = ''
         while True:
-            y_n = input('would you like to restart? y/n')  # предложение переиграть
-            if y_n in ('y', 'n'):
+            diagonal = input('is it possible to win through the diagonal? y/n')  # запрос на правило диагоналей
+            if diagonal in ('y', 'n'):
                 break
             print('Invalid input.')
-        if y_n == 'y':
+        main(board, board_size)
+        restart = ''
+        while True:
+            restart = input('would you like to restart? y/n')  # предложение переиграть
+            if restart in ('y', 'n'):
+                break
+            print('Invalid input.')
+        if restart == 'y':
             continue
-        elif y_n == 'n':
+        elif restart == 'n':
             break
     else:
         print('you must enter integer > 2')
