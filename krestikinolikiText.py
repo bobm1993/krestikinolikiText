@@ -116,7 +116,7 @@ while True:
     except ValueError:
         print('you must enter integer > 2')
         continue
-    if board_size > 2 and num > 2:
+    if board_size > 2 and 2 < num <= board_size:
         board = list(range(1, board_size ** 2 + 1))
         diagonal = ''
         while True:
@@ -136,4 +136,4 @@ while True:
         elif restart == 'n':
             break
     else:
-        print('you must enter integer > 2')
+        print('you must enter integers > 2 and count of icons in row must be equal or less then size of board')
